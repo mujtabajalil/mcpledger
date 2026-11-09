@@ -202,35 +202,35 @@ interface FileChange { path: string; change: 'added' | 'removed' | 'changed'; di
   styles: `
     .crumb { display: inline-block; margin-bottom: 10px; }
     .title { gap: 14px; }
-    .banner { border-radius: var(--r-md); padding: 12px 16px; margin-bottom: 20px; font-size: 14.5px; border-left: 4px solid; }
-    .banner.blocked { background: var(--block-tint); border-color: var(--block); }
-    .banner.drift { background: var(--drift-tint); border-color: var(--drift); }
-    .banner.pending { background: var(--pending-tint); border-color: var(--pending); }
-    .decide { border-color: var(--block); }
+    .banner { border-radius: var(--r-md); padding: 12px 16px; margin-bottom: 20px; font-size: 14.5px; border: 1px solid; }
+    .banner.blocked { background: var(--block-tint); border-color: #f6d2ce; color: #8f1d14; }
+    .banner.drift { background: var(--drift-tint); border-color: #f6e0bb; color: #7a4108; }
+    .banner.pending { background: var(--well); border-color: var(--rule-strong); color: var(--ink-soft); }
+    .decide { border-color: #f2c4bf; }
     tr.sel td { background: var(--gate-tint) !important; }
     td.actions { text-align: right; white-space: nowrap; }
     .ok { color: var(--ok); } .bad { color: var(--block); }
     .findings, .tools, .changes { list-style: none; margin: 0; padding: 0; }
-    .findings li, .tools li { padding: 14px 20px; border-bottom: 1px solid var(--rule); }
+    .findings li, .tools li { padding: 16px 20px; border-bottom: 1px solid var(--rule); }
     .findings li:last-child, .tools li:last-child { border-bottom: 0; }
     .findings p { margin-top: 4px; max-width: 80ch; }
-    .evidence { display: block; margin-top: 8px; background: #f2f4f0; padding: 6px 10px; border-radius: var(--r-sm); white-space: pre-wrap; word-break: break-word; }
+    .evidence { display: block; margin-top: 8px; background: var(--well); border: 1px solid var(--rule); padding: 7px 10px; border-radius: var(--r-sm); white-space: pre-wrap; word-break: break-word; }
     .tools p { margin-top: 4px; color: var(--ink-soft); white-space: pre-wrap; max-width: 80ch; }
     .changes li { padding: 4px 0; }
     .split { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 20px; margin-top: 20px; align-items: start; }
     .split .panel + .panel { margin-top: 0; }
     .split + .panel { margin-top: 20px; }
-    pre.diff, pre.file { font-family: var(--mono); font-size: 12.5px; background: #f6f7f4; border: 1px solid var(--rule); border-radius: var(--r-sm);
+    pre.diff, pre.file { font-family: var(--mono); font-size: 12.5px; background: #fafaf9; border: 1px solid var(--rule); border-radius: var(--r-sm);
       padding: 10px 12px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; margin: 8px 0 0; max-height: 420px; overflow-y: auto; }
-    pre.diff .add { background: #dff0e4; color: #1d5a35; display: block; }
-    pre.diff .del { background: #f8e1de; color: #8e1b14; display: block; text-decoration: line-through; text-decoration-color: rgba(142,27,20,.35); }
+    pre.diff .add { background: #e9f8ee; color: #14632f; display: block; }
+    pre.diff .del { background: #fdeeec; color: #a31c12; display: block; text-decoration: line-through; text-decoration-color: rgba(142,27,20,.35); }
     pre.diff .same { color: var(--ink-soft); display: block; }
     .change h3 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .pill { font-size: 11.5px; font-weight: 700; padding: 1px 8px; border-radius: 999px; }
+    .pill { font-size: 12px; font-weight: 500; padding: 2px 8px; border-radius: 6px; }
     .pill.added { background: var(--ok-tint); color: var(--ok); }
     .pill.removed { background: var(--block-tint); color: var(--block); }
     .pill.changed { background: var(--drift-tint); color: var(--drift); }
-    @media (max-width: 980px) { .split { grid-template-columns: 1fr; } .split .panel + .panel { margin-top: 20px; } }
+    @media (max-width: 980px) { .split { grid-template-columns: minmax(0, 1fr); } .split .panel + .panel { margin-top: 20px; } }
   `,
 })
 export class ComponentPage implements OnInit {

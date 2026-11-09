@@ -2,13 +2,13 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Api, ComponentRow, errorText } from '../api';
-import { AgoPipe, ClientPipe, SevBadge, StatusBadge } from '../shared';
+import { AgoPipe, Avatar, ClientPipe, SevBadge, StatusBadge } from '../shared';
 
 type StatusFilter = '' | 'pending' | 'drift' | 'approved' | 'blocked';
 
 @Component({
   selector: 'sg-inventory',
-  imports: [FormsModule, RouterLink, AgoPipe, ClientPipe, SevBadge, StatusBadge],
+  imports: [FormsModule, RouterLink, AgoPipe, Avatar, ClientPipe, SevBadge, StatusBadge],
   template: `
     <div class="page">
       <div class="page-head">
@@ -16,6 +16,7 @@ type StatusFilter = '' | 'pending' | 'drift' | 'approved' | 'blocked';
           <h1>Inventory</h1>
           <p class="sub">Every MCP server and skill reported by your team's machines. Approving pins the exact version you reviewed.</p>
         </div>
+        <input type="search" class="find" placeholder="Search name or package" [ngModel]="q()" (ngModelChange)="q.set($event)" aria-label="Search">
       </div>
 
       <div class="filters">
@@ -30,7 +31,6 @@ type StatusFilter = '' | 'pending' | 'drift' | 'approved' | 'blocked';
           <button [class.on]="kind() === 'mcp_server'" (click)="kind.set('mcp_server')">MCP servers</button>
           <button [class.on]="kind() === 'skill'" (click)="kind.set('skill')">Skills</button>
         </div>
-        <input type="search" placeholder="Search name or package" [ngModel]="q()" (ngModelChange)="q.set($event)" aria-label="Search">
       </div>
 
       @if (error()) { <div class="error-box">{{ error() }}</div> }
@@ -50,12 +50,12 @@ type StatusFilter = '' | 'pending' | 'drift' | 'approved' | 'blocked';
             <tbody>
               @for (c of visible(); track c.id) {
                 <tr class="clickable" (click)="open(c.id)">
-                  <td>
+                  <td><div class="who"><sg-avatar [name]="c.name" [kind]="c.kind" /><div>
                     <a [routerLink]="['/inventory', c.id]" (click)="$event.stopPropagation()"><strong>{{ c.name }}</strong></a>
                     <div class="faint small">{{ c.kind === 'skill' ? 'Skill' : 'MCP server' }}
                       @if (c.kind === 'mcp_server') { · {{ c.introspected ? c.tool_count + (c.tool_count === 1 ? ' tool' : ' tools') : 'tools not recorded' }} }
                       @if (c.versions > 1) { · {{ c.versions }} versions seen }</div>
-                  </td>
+                  </div></div></td>
                   <td><sg-status [value]="c.status" /></td>
                   <td><sg-sev [value]="c.max_severity" /></td>
                   <td class="num">{{ c.devices }}</td>
@@ -71,7 +71,9 @@ type StatusFilter = '' | 'pending' | 'drift' | 'approved' | 'blocked';
   `,
   styles: `
     .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
-    .filters input { max-width: 280px; }
+    .find { width: 300px; }
+    .who { display: flex; align-items: center; gap: 12px; }
+    @media (max-width: 760px) { .find { width: 100%; } }
     .n { font-weight: 500; opacity: .7; margin-left: 4px; }
   `,
 })
@@ -106,6 +108,7 @@ export class InventoryPage implements OnInit {
   async ngOnInit() {
     const s = this.route.snapshot.queryParamMap.get('status') as StatusFilter | null;
     if (s) this.status.set(s);
+    this.q.set(this.route.snapshot.queryParamMap.get('q') ?? '');
     try { this.rows.set(await this.api.get<ComponentRow[]>('/api/components')); }
     catch (e) { this.error.set(errorText(e)); }
     finally { this.loaded.set(true); }

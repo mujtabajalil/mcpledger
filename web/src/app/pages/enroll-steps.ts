@@ -38,14 +38,14 @@ import { Api } from '../api';
     .steps { list-style: none; counter-reset: s; margin: 0; padding: 0; display: grid; gap: 22px; max-width: 820px; }
     .steps li { counter-increment: s; position: relative; padding-left: 44px; }
     .steps li::before { content: counter(s); position: absolute; left: 0; top: -2px; width: 28px; height: 28px; border-radius: 50%;
-      background: var(--petrol); color: #fff; font-weight: 700; font-size: 14px; display: grid; place-items: center; }
+      background: var(--paper); color: var(--ink); border: 1px solid var(--rule-strong); box-shadow: var(--shadow-xs); font-weight: 600; font-size: 13px; display: grid; place-items: center; }
     .steps h3 { margin-bottom: 4px; }
     .steps p { margin-bottom: 10px; }
   `,
 })
 export class EnrollSteps {
   api = inject(Api);
-  install = 'pipx install mcpledger';
+  install = 'pipx install "git+https://github.com/mujtabajalil/mcpledger#subdirectory=cli"';
   scan = 'mcpledger scan --introspect';
   schedule = 'mcpledger schedule --every 6     # CI / pre-commit:  mcpledger check';
 }

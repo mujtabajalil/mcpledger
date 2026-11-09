@@ -135,7 +135,7 @@ declare global { interface Window { Paddle?: any } }
                 @default {
                   <p>You're running the free <strong>Community edition</strong>: no machine limit, Slack alerts, approvals and drift detection included.</p>
                   <p class="muted small">A <strong>Business license</strong> adds audit-log CSV export for SOC 2 evidence, priority support, and SSO and longer retention when they ship.
-                    Email <a href="mailto:licensing@mcpledger.dev">licensing&#64;mcpledger.dev</a>, then set the key as <code>MCPLEDGER_LICENSE_KEY</code> and restart.</p>
+                    <a href="https://github.com/mujtabajalil/mcpledger/issues/new?title=Business%20license" target="_blank" rel="noopener">Request one on GitHub</a>, then set the key as <code>MCPLEDGER_LICENSE_KEY</code> and restart.</p>
                 }
               }
             </div>
@@ -166,16 +166,16 @@ declare global { interface Window { Paddle?: any } }
     .jump { display: flex; gap: 18px; margin-bottom: 18px; font-size: 14px; flex-wrap: wrap; }
     .panel { scroll-margin-top: 16px; }
     .choice { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 10px; }
-    .choice label { border: 1px solid var(--rule-strong); border-radius: var(--r-md); padding: 12px 14px 12px 40px; position: relative; cursor: pointer; display: flex; flex-direction: column; gap: 2px; background: #fff; }
-    .choice label.on { border-color: var(--gate); box-shadow: inset 0 0 0 1px var(--gate); background: #f4faf9; }
+    .choice label { border: 1px solid var(--rule-strong); border-radius: var(--r-md); box-shadow: var(--shadow-xs); padding: 12px 14px 12px 40px; position: relative; cursor: pointer; display: flex; flex-direction: column; gap: 2px; background: #fff; }
+    .choice label.on { border-color: var(--gate); box-shadow: inset 0 0 0 1px var(--gate); background: #f8f9ff; }
     .choice input { position: absolute; left: 14px; top: 14px; accent-color: var(--gate); }
     .choice span { font-size: 13.5px; color: var(--ink-soft); }
     .invite input[type=email] { max-width: 320px; }
     .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
     .plan { padding: 20px; border-right: 1px solid var(--rule); display: flex; flex-direction: column; gap: 10px; }
     .plan:last-child { border-right: 0; }
-    .plan.current { background: #f4faf9; }
-    .price { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+    .plan.current { background: #f8f9ff; }
+    .price { font-size: 28px; font-weight: 600; letter-spacing: -0.03em; }
     .price span { font-size: 14px; font-weight: 500; color: var(--ink-soft); }
     .plan ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(--ink-soft); flex: 1; }
     .plan .btn { align-self: flex-start; }

@@ -80,13 +80,143 @@ def load_json(path: Path) -> Optional[dict]:
 
 
 def load_toml(path: Path) -> Optional[dict]:
-    if tomllib is None:
-        return None
     try:
+        if tomllib is None:
+            return parse_toml_subset(path.read_text(encoding="utf-8"))
         with path.open("rb") as fh:
             return tomllib.load(fh)
     except Exception:
         return None
+
+
+_TOML_ESC = {"n": "\n", "t": "\t", "r": "\r", "b": "\b", "f": "\f", '"': '"', "\\": "\\"}
+_TOML_BARE = re.compile(r"[A-Za-z0-9_-]+")
+_TOML_NUM = re.compile(r"[+-]?[0-9_]+(\.[0-9_]+)?([eE][+-]?[0-9]+)?")
+
+
+def parse_toml_subset(s: str) -> dict:
+    """Stdlib-only TOML reader for Python < 3.11. Raises on anything it does not understand."""
+    # shortcut: no dates, multi-line strings, hex/inf/nan, and [[array of tables]] are skipped; drop this when the minimum Python becomes 3.11
+    i = 0
+
+    def ws(nl: bool = False) -> None:  # skip blanks and comments, and newlines if nl
+        nonlocal i
+        while i < len(s) and (s[i] in " \t\r#" or (nl and s[i] == "\n")):
+            if s[i] == "#":
+                j = s.find("\n", i)
+                i = len(s) if j < 0 else j
+            else:
+                i += 1
+
+    def string() -> str:
+        nonlocal i
+        q, out, i = s[i], [], i + 1
+        while s[i] != q:
+            if s[i] == "\n":
+                raise ValueError("newline in string")
+            if s[i] == "\\" and q == '"':
+                e = s[i + 1]
+                n = {"u": 4, "U": 8}.get(e, 0)
+                out.append(chr(int(s[i + 2:i + 2 + n], 16)) if n else _TOML_ESC[e])
+                i += 2 + n
+            else:
+                out.append(s[i])
+                i += 1
+        i += 1
+        return "".join(out)
+
+    def key() -> list:
+        nonlocal i
+        parts = []
+        while True:
+            ws()
+            if s[i] in "\"'":
+                parts.append(string())
+            else:
+                m = _TOML_BARE.match(s, i)
+                if not m:
+                    raise ValueError("bad key")
+                parts.append(m.group())
+                i = m.end()
+            ws()
+            if s[i:i + 1] != ".":
+                return parts
+            i += 1
+
+    def seq(close: str, item) -> None:  # comma-separated items up to `close`, trailing comma allowed
+        nonlocal i
+        i += 1
+        while True:
+            ws(True)
+            if s[i] == close:
+                i += 1
+                return
+            item()
+            ws(True)
+            if s[i] == ",":
+                i += 1
+            elif s[i] != close:
+                raise ValueError("expected , or " + close)
+
+    def value():
+        nonlocal i
+        if s[i] in "\"'":
+            return string()
+        if s[i] == "[":
+            arr: list = []
+            seq("]", lambda: arr.append(value()))
+            return arr
+        if s[i] == "{":
+            tbl: dict = {}
+            seq("}", lambda: assign(tbl))
+            return tbl
+        for word, v in (("true", True), ("false", False)):
+            if s.startswith(word, i):
+                i += len(word)
+                return v
+        m = _TOML_NUM.match(s, i)
+        if not m:
+            raise ValueError("bad value")
+        i, t = m.end(), m.group().replace("_", "")
+        return float(t) if m.group(1) or m.group(2) else int(t)
+
+    def descend(d: dict, path: list) -> dict:
+        for p in path:
+            d = d.setdefault(p, {})
+            if not isinstance(d, dict):
+                raise ValueError("key is not a table")
+        return d
+
+    def assign(table: dict) -> None:
+        nonlocal i
+        *path, last = key()
+        if s[i] != "=":
+            raise ValueError("expected =")
+        i += 1
+        ws()
+        d = descend(table, path)
+        if last in d:
+            raise ValueError("duplicate key")
+        d[last] = value()
+
+    root = cur = {}
+    while True:
+        ws(True)
+        if i >= len(s):
+            return root
+        if s[i] == "[":
+            aot = s.startswith("[[", i)
+            i += 2 if aot else 1
+            path = key()
+            if s[i:i + (2 if aot else 1)] != ("]]" if aot else "]"):
+                raise ValueError("bad table header")
+            i += 2 if aot else 1
+            cur = {} if aot else descend(root, path)  # [[...]] contents are parsed then dropped
+        else:
+            assign(cur)
+        ws()
+        if i < len(s) and s[i] != "\n":
+            raise ValueError("expected end of line")
 
 
 def _looks_like_reference(value: str) -> bool:

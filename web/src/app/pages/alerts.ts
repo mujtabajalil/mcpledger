@@ -45,11 +45,11 @@ const TYPE_LABEL: Record<string, string> = {
   `,
   styles: `
     .alerts { list-style: none; margin: 0; padding: 0; }
-    .alerts li { display: grid; grid-template-columns: 90px 1fr auto; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--rule); align-items: start; }
+    .alerts li { display: grid; grid-template-columns: 90px 1fr auto; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--rule); align-items: start; }
     .alerts li:last-child { border-bottom: 0; }
     .alerts li.read { opacity: .6; }
     .main p { margin-top: 3px; max-width: 80ch; }
-    .type { font-size: 12px; font-weight: 600; color: var(--ink-soft); background: #e8ebe6; padding: 1px 7px; border-radius: var(--r-sm); }
+    .type { font-size: 12px; font-weight: 500; color: var(--ink-soft); background: var(--well); border: 1px solid var(--rule); padding: 2px 8px; border-radius: 6px; }
     .meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; white-space: nowrap; }
     @media (max-width: 760px) { .alerts li { grid-template-columns: 1fr; } .meta { align-items: flex-start; } }
   `,

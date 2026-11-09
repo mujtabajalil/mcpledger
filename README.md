@@ -30,7 +30,7 @@ Every developer on your team now runs AI tools that load **MCP servers** and **a
 MCPLedger gives you the missing ledger: **see** what's installed on every machine, **approve** the exact versions you reviewed, get **alerted** the moment one changes, and **block** the ones you don't trust, in CI as well as on laptops.
 
 <p align="center">
-  <img src=".github/assets/dashboard.webp" alt="MCPLedger overview: two components changed since approval and three waiting on review, with a feed of the latest activity" width="100%">
+  <img src=".github/assets/dashboard.webp" alt="MCPLedger overview: KPI cards for items needing review, changed since approval, approved share and machines reporting, a components-by-AI-tool chart, and the high-risk items waiting for review" width="100%">
 </p>
 
 ## Highlights

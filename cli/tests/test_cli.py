@@ -25,6 +25,39 @@ def test_discovers_all_clients(fake_home, tmp_path):
     assert skills["pdf-tools"]["description"] == "Work with PDF files."
 
 
+def test_toml_fallback_parser_reads_codex_config():
+    text = '''# Codex config
+model = "o3"
+
+[mcp_servers.docker]
+command = "docker"  # trailing comment
+args = [
+  "run", "-i",  # multi-line, trailing comma
+  'C:\\no\\escapes',
+]
+env = { API_KEY = "a\\"b\\u00e9", "quoted.key" = 'w' }
+timeout = 1_000
+ratio = 0.5
+enabled = true
+
+[mcp_servers.gh]
+command = "npx"
+
+[mcp_servers.gh.env]
+TOKEN = "x#not-a-comment"
+
+[[profiles]]
+name = "skipped"
+'''
+    data = discovery.parse_toml_subset(text)
+    assert data == {"model": "o3", "mcp_servers": {"docker": {
+        "command": "docker", "args": ["run", "-i", "C:\\no\\escapes"], "timeout": 1000, "ratio": 0.5,
+        "enabled": True, "env": {"API_KEY": 'a"b\u00e9', "quoted.key": "w"}},
+        "gh": {"command": "npx", "env": {"TOKEN": "x#not-a-comment"}}}}
+    if discovery.tomllib is not None:
+        assert data == {k: v for k, v in discovery.tomllib.loads(text).items() if k != "profiles"}
+
+
 def test_secret_values_never_leave(fake_home, tmp_path):
     inv = discovery.discover(home=fake_home, projects=[])
     gh = _by_name(inv["mcp_servers"])["github"]
