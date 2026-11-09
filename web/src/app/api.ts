@@ -13,7 +13,9 @@ export interface Me {
 export interface PlanInfo { label: string; price: number; max_devices: number; slack: boolean; audit_export: boolean; history_days: number }
 export interface Org {
   id: string; name: string; role: 'owner' | 'admin' | 'member'; plan: string; plan_info: PlanInfo;
-  subscription_status: string | null; policy_mode: 'monitor' | 'enforce'; default_action: 'warn' | 'block';
+  subscription_status: string | null;
+  edition: { mode: 'cloud' | 'self_hosted'; license_status?: 'none' | 'active' | 'expired' | 'invalid'; license?: { customer: string; max_devices: number; expires: string; license_id: string } | null; license_error?: string | null };
+  policy_mode: 'monitor' | 'enforce'; default_action: 'warn' | 'block';
   alert_min_severity: Severity; slack_configured: boolean; device_count: number;
   enroll_token: string | null; enroll_command: string | null; server_url: string;
 }

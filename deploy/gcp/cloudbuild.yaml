@@ -72,7 +72,7 @@ steps:
           --service-account mcpledger-run@$PROJECT_ID.iam.gserviceaccount.com \
           --add-cloudsql-instances $$CONN \
           --set-secrets DATABASE_URL=mcpledger-database-url:latest,PADDLE_WEBHOOK_SECRET=mcpledger-paddle-webhook-secret:latest \
-          --set-env-vars "^@^PUBLIC_URL=${_PUBLIC_URL}@ALLOWED_ORIGINS=${_PUBLIC_URL}@PADDLE_ENV=${_PADDLE_ENV}@PADDLE_CLIENT_TOKEN=${_PADDLE_CLIENT_TOKEN}@PADDLE_PRICE_TEAM=${_PADDLE_PRICE_TEAM}@PADDLE_PRICE_BUSINESS=${_PADDLE_PRICE_BUSINESS}" \
+          --set-env-vars "^@^DEPLOYMENT_MODE=cloud@PUBLIC_URL=${_PUBLIC_URL}@ALLOWED_ORIGINS=${_PUBLIC_URL}@PADDLE_ENV=${_PADDLE_ENV}@PADDLE_CLIENT_TOKEN=${_PADDLE_CLIENT_TOKEN}@PADDLE_PRICE_TEAM=${_PADDLE_PRICE_TEAM}@PADDLE_PRICE_BUSINESS=${_PADDLE_PRICE_BUSINESS}" \
           --allow-unauthenticated \
           --cpu 1 --memory 512Mi --concurrency 80 \
           --min-instances ${_MIN_INSTANCES} --max-instances 10 \

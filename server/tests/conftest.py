@@ -5,6 +5,7 @@ from pathlib import Path
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 os.environ.setdefault("PUBLIC_URL", "http://testserver")
 os.environ["ALLOWED_ORIGINS"] = "http://testserver"
+os.environ["DEPLOYMENT_MODE"] = "cloud"  # test_editions.py switches to self_hosted per test
 os.environ["PADDLE_WEBHOOK_SECRET"] = "pdl_ntfset_test"
 os.environ["PADDLE_PRICE_TEAM"] = "pri_team"
 os.environ["PADDLE_PRICE_BUSINESS"] = "pri_business"

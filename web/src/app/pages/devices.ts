@@ -11,7 +11,8 @@ import { AgoPipe } from '../shared';
       <div class="page-head">
         <div><h1>Devices</h1>
           <p class="sub">Machines enrolled with <code>mcpledger enroll</code>.
-            {{ api.org()?.device_count }} of {{ api.org()?.plan_info?.max_devices }} on the {{ api.org()?.plan_info?.label }} plan.</p></div>
+            @if ((api.org()?.plan_info?.max_devices ?? 0) >= 1000000) { {{ api.org()?.device_count }} enrolled, no limit on the {{ api.org()?.plan_info?.label }} edition. }
+            @else { {{ api.org()?.device_count }} of {{ api.org()?.plan_info?.max_devices }} on the {{ api.org()?.plan_info?.label }} plan. }</p></div>
         <a class="btn" routerLink="/settings" fragment="enroll">Enroll a machine</a>
       </div>
       @if (error()) { <div class="error-box">{{ error() }}</div> }

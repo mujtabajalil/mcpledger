@@ -6,7 +6,8 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import func, select
 
-from ..config import PLANS, settings
+from ..config import settings
+from ..editions import edition_info, effective_plan
 from ..deps import OrgContext, admin_context, audit, check_origin, client_ip, org_context
 from ..models import Component, Device, Event, Invite, Membership, Observation, User
 from ..schemas import InviteIn, PolicyIn, RoleIn, SlackIn
@@ -23,7 +24,7 @@ def _device_count(ctx: OrgContext) -> int:
 
 def org_dict(ctx: OrgContext) -> dict:
     o = ctx.org
-    plan = PLANS.get(o.plan, PLANS["free"])
+    plan = effective_plan(o)
     is_admin = ctx.role in ("admin", "owner")
     server = settings.public_url
     return {
@@ -33,6 +34,7 @@ def org_dict(ctx: OrgContext) -> dict:
         "plan": o.plan,
         "plan_info": plan,
         "subscription_status": o.subscription_status,
+        "edition": edition_info(),
         "policy_mode": o.policy_mode,
         "default_action": o.default_action,
         "alert_min_severity": o.alert_min_severity,
@@ -64,7 +66,7 @@ def set_slack(body: SlackIn, request: Request, ctx: OrgContext = Depends(admin_c
     url = (body.slack_webhook_url or "").strip() or None
     if url and not alerts.is_valid_webhook(url):
         raise HTTPException(400, "Use a Slack incoming-webhook URL (https://hooks.slack.com/...)")
-    if url and not alerts.slack_allowed(ctx.org.plan):
+    if url and not effective_plan(ctx.org)["slack"]:
         raise HTTPException(402, "Slack alerts are on the Team plan and above")
     ctx.org.slack_webhook_url = url
     audit(ctx.db, ctx.org.id, ctx.user.email, "slack.updated" if url else "slack.removed", "org", {}, client_ip(request))

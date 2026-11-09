@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib.util
 import logging
 import os
 from pathlib import Path
@@ -23,6 +24,12 @@ app = FastAPI(title="MCPLedger", version=__version__,
 
 for r in (auth.router, org.router, inventory.router, device_api.router, billing.router):
     app.include_router(r)
+
+# Enterprise features (server/ee, MCPLedger Enterprise License). Each endpoint checks the
+# org's plan or license itself; the open-source build works the same without this folder.
+if importlib.util.find_spec("ee") is not None:
+    from ee import router as ee_router
+    app.include_router(ee_router)
 
 
 @app.middleware("http")

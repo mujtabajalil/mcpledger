@@ -4,7 +4,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from ..config import PLANS
+from ..editions import effective_plan
 from ..db import get_db
 from ..deps import audit, client_ip, current_device
 from ..models import Device, Event, Org
@@ -23,10 +23,11 @@ def enroll(body: EnrollIn, request: Request, db: Session = Depends(get_db)):
     org = db.scalars(select(Org).where(Org.enroll_token == body.enroll_token.strip())).first()
     if not org:
         raise HTTPException(401, "Invalid enrollment token. Copy it again from Settings > Enroll devices.")
-    limit = PLANS.get(org.plan, PLANS["free"])["max_devices"]
+    plan = effective_plan(org)
+    limit = plan["max_devices"]
     count = db.scalar(select(func.count()).select_from(Device).where(Device.org_id == org.id, Device.revoked.is_(False)))
     if count >= limit:
-        raise HTTPException(402, f"Your {PLANS[org.plan]['label']} plan allows {limit} devices. "
+        raise HTTPException(402, f"Your {plan['label']} plan allows {limit} devices. "
                                  "Upgrade or revoke an old device in the dashboard.")
     key = new_token("mld")
     dev = Device(org_id=org.id, hostname=body.hostname[:255], os=body.os, username=body.username,
@@ -54,6 +55,6 @@ async def report(request: Request, background: BackgroundTasks, device: Device =
         device.cli_version = body.cli_version[:40]
     result, new_events = ingest_report(db, org, device, body)
     if new_events:
-        background.add_task(alerts.notify, org.slack_webhook_url, org.plan, org.alert_min_severity, org.name,
+        background.add_task(alerts.notify, org.slack_webhook_url, effective_plan(org)["slack"], org.alert_min_severity, org.name,
                             device.hostname, new_events)
     return result

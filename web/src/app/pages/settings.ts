@@ -13,7 +13,7 @@ declare global { interface Window { Paddle?: any } }
       <div class="page-head"><div><h1>Settings</h1><p class="sub">{{ api.org()?.name }}</p></div></div>
 
       <nav class="jump">
-        <a href="#policy">Policy</a><a href="#enroll">Enroll machines</a><a href="#alerts">Alerts</a><a href="#members">Members</a><a href="#billing">Plan</a>
+        <a href="#policy">Policy</a><a href="#enroll">Enroll machines</a><a href="#alerts">Alerts</a><a href="#members">Members</a><a href="#billing">{{ api.org()?.edition?.mode === 'self_hosted' ? 'Edition' : 'Plan' }}</a>
       </nav>
 
       @if (api.org(); as o) {
@@ -116,6 +116,31 @@ declare global { interface Window { Paddle?: any } }
           }
         </section>
 
+        @if (o.edition.mode === 'self_hosted') {
+          <section class="panel" id="billing">
+            <header><h2>Edition</h2><span class="faint small">Self-hosted · {{ o.plan_info.label }}</span></header>
+            <div class="body stack">
+              @switch (o.edition.license_status) {
+                @case ('active') {
+                  <p>Licensed to <strong>{{ o.edition.license?.customer }}</strong> for
+                    {{ o.edition.license!.max_devices >= 1000000 ? 'unlimited' : o.edition.license?.max_devices }} machines, until {{ o.edition.license?.expires }}.</p>
+                  <p class="faint small">License ID {{ o.edition.license?.license_id }}. Audit-log export and other Business features are on.</p>
+                }
+                @case ('expired') {
+                  <div class="notice">Your Business license expired on {{ o.edition.license?.expires }}. This install is running the Community edition; nothing was deleted. Set a renewed key in <code>MCPLEDGER_LICENSE_KEY</code> and restart.</div>
+                }
+                @case ('invalid') {
+                  <div class="error-box">The license key in <code>MCPLEDGER_LICENSE_KEY</code> isn't valid ({{ o.edition.license_error }}). Running the Community edition.</div>
+                }
+                @default {
+                  <p>You're running the free <strong>Community edition</strong>: no machine limit, Slack alerts, approvals and drift detection included.</p>
+                  <p class="muted small">A <strong>Business license</strong> adds audit-log CSV export for SOC 2 evidence, priority support, and SSO and longer retention when they ship.
+                    Email <a href="mailto:licensing@mcpledger.dev">licensing&#64;mcpledger.dev</a>, then set the key as <code>MCPLEDGER_LICENSE_KEY</code> and restart.</p>
+                }
+              }
+            </div>
+          </section>
+        } @else {
         <section class="panel" id="billing">
           <header><h2>Plan</h2><span class="faint small">Current: {{ o.plan_info.label }}{{ o.subscription_status ? ' (' + o.subscription_status + ')' : '' }}</span></header>
           <div class="plans">
@@ -133,6 +158,7 @@ declare global { interface Window { Paddle?: any } }
           </div>
           @if (billing() && !billing().paddle.enabled) { <p class="faint small body">Checkout isn't configured on this server yet (set the PADDLE_* variables).</p> }
         </section>
+        }
       }
     </div>
   `,

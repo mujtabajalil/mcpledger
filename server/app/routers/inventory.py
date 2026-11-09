@@ -1,16 +1,12 @@
 from __future__ import annotations
 
-import csv
-import io
 from collections import defaultdict
 from datetime import datetime, timezone
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
-from fastapi.responses import StreamingResponse
 from sqlalchemy import func, select
 
-from ..config import PLANS
 from ..deps import OrgContext, admin_context, audit, check_origin, client_ip, org_context
 from ..models import AuditLog, Component, ComponentVersion, Device, Event, Observation
 from ..schemas import DecisionIn
@@ -257,19 +253,3 @@ def _audit_rows(ctx: OrgContext, limit: int):
 def list_audit(ctx: OrgContext = Depends(org_context), limit: int = Query(200, le=1000)):
     return [{"id": a.id, "actor": a.actor, "action": a.action, "target": a.target, "details": a.details,
              "ip": a.ip, "created_at": a.created_at} for a in _audit_rows(ctx, limit)]
-
-
-@router.get("/audit/export.csv")
-def export_audit(ctx: OrgContext = Depends(admin_context)):
-    if not PLANS.get(ctx.org.plan, PLANS["free"])["audit_export"]:
-        raise HTTPException(402, "Audit export is on the Business plan")
-    buf = io.StringIO()
-    w = csv.writer(buf)
-    w.writerow(["timestamp_utc", "actor", "action", "target", "details", "ip"])
-    import json
-    for a in _audit_rows(ctx, 100_000):
-        w.writerow([a.created_at.isoformat(), a.actor, a.action, a.target, json.dumps(a.details), a.ip or ""])
-    buf.seek(0)
-    name = f"mcpledger-audit-{datetime.now(timezone.utc):%Y%m%d}.csv"
-    return StreamingResponse(iter([buf.getvalue()]), media_type="text/csv",
-                             headers={"Content-Disposition": f'attachment; filename="{name}"'})

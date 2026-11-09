@@ -29,6 +29,9 @@ class Settings:
     paddle_webhook_secret: str = field(default_factory=lambda: os.environ.get("PADDLE_WEBHOOK_SECRET", ""))
     paddle_price_team: str = field(default_factory=lambda: os.environ.get("PADDLE_PRICE_TEAM", ""))
     paddle_price_business: str = field(default_factory=lambda: os.environ.get("PADDLE_PRICE_BUSINESS", ""))
+    # "self_hosted" (default, the open-source Community edition) or "cloud" (the hosted service).
+    deployment_mode: str = field(default_factory=lambda: os.environ.get("DEPLOYMENT_MODE", "self_hosted"))
+    license_key: str = field(default_factory=lambda: os.environ.get("MCPLEDGER_LICENSE_KEY", "").strip())
     max_report_bytes: int = field(default_factory=lambda: int(os.environ.get("MAX_REPORT_BYTES", str(8 * 1024 * 1024))))
 
     @property

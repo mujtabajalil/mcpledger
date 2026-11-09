@@ -23,8 +23,9 @@ def billing_info(ctx: OrgContext = Depends(org_context)):
         "plan": ctx.org.plan,
         "subscription_status": ctx.org.subscription_status,
         "plans": PLANS,
+        "deployment_mode": settings.deployment_mode,
         "paddle": {
-            "enabled": bool(settings.paddle_client_token and settings.paddle_price_team),
+            "enabled": settings.deployment_mode == "cloud" and bool(settings.paddle_client_token and settings.paddle_price_team),
             "environment": settings.paddle_env,
             "client_token": settings.paddle_client_token,
             "prices": {"team": settings.paddle_price_team, "business": settings.paddle_price_business},
@@ -57,8 +58,6 @@ async def paddle_webhook(request: Request, db: Session = Depends(get_db)):
     org.subscription_status = status
     org.paddle_subscription_id = data.get("id") or org.paddle_subscription_id
     org.paddle_customer_id = data.get("customer_id") or org.paddle_customer_id
-    if plan == "free" and org.slack_webhook_url and not PLANS["free"]["slack"]:
-        pass  # keep the URL so it comes back on upgrade; alerts.notify checks the plan
     audit(db, org.id, "billing:paddle", "billing.plan_changed", org.name, {"from": old, "to": plan, "status": status,
                                                                           "event": etype})
     db.commit()

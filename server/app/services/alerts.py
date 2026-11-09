@@ -5,16 +5,12 @@ import logging
 
 import httpx
 
-from ..config import PLANS, settings
+from ..config import settings
 
 log = logging.getLogger("mcpledger.alerts")
 SEV_RANK = {"info": 0, "low": 1, "medium": 2, "high": 3, "critical": 4}
 EMOJI = {"critical": ":rotating_light:", "high": ":red_circle:", "medium": ":large_orange_circle:",
          "low": ":large_blue_circle:", "info": ":white_circle:"}
-
-
-def slack_allowed(plan: str) -> bool:
-    return PLANS.get(plan, PLANS["free"])["slack"]
 
 
 def is_valid_webhook(url: str) -> bool:
@@ -47,8 +43,8 @@ def send_slack(webhook: str, payload: dict) -> bool:
         return False
 
 
-def notify(webhook: str | None, plan: str, min_severity: str, org_name: str, device: str, events: list[dict]) -> None:
-    if not webhook or not slack_allowed(plan):
+def notify(webhook: str | None, allowed: bool, min_severity: str, org_name: str, device: str, events: list[dict]) -> None:
+    if not webhook or not allowed:
         return
     picked = [e for e in events if SEV_RANK.get(e["severity"], 0) >= SEV_RANK.get(min_severity, 2)]
     if picked:

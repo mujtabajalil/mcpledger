@@ -1,0 +1,36 @@
+MCPLedger Enterprise License
+
+Copyright (c) 2026 MCPLedger. All rights reserved.
+
+This license applies to everything in the server/ee/ directory of this repository
+(the "Enterprise Software"). The rest of the repository is licensed separately:
+the server and dashboard under the GNU Affero General Public License v3.0 (LICENSE at
+the repository root) and the CLI under the Apache License 2.0 (cli/LICENSE).
+
+1. Development and testing. You may copy, modify and run the Enterprise Software
+   for developing, testing and evaluating MCPLedger, free of charge, for up to 30 days
+   per evaluation.
+
+2. Production use. You may use the Enterprise Software in production only while you
+   hold a valid MCPLedger subscription that covers it: an MCPLedger Cloud Business plan,
+   or a self-hosted Business license key issued by MCPLedger, and only within the limits
+   (such as number of devices and expiry date) of that subscription.
+
+3. Restrictions. You may not (a) remove, disable or work around the license-key check,
+   or any other mechanism that enforces these terms; (b) sell, sublicense, distribute or
+   provide the Enterprise Software, or a modified version of it, as a hosted service to
+   third parties; or (c) remove or change this notice.
+
+4. Contributions. Contributions to the Enterprise Software are accepted only under the
+   Contributor License Agreement described in CONTRIBUTING.md.
+
+5. No warranty. THE ENTERPRISE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+   KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT
+   SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY ARISING FROM, OUT OF OR IN CONNECTION WITH THE ENTERPRISE SOFTWARE.
+
+6. Termination. These rights end automatically if you breach this license. On
+   termination you must stop using the Enterprise Software in production.
+
+For a license key, contact licensing@mcpledger.dev.
