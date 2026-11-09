@@ -1,0 +1,12 @@
+node_modules/
+.angular/
+dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+*.db
+.venv/
+venv/
+.env
+.DS_Store

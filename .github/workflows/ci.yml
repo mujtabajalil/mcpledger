@@ -1,0 +1,32 @@
+name: ci
+on:
+  push: { branches: [main] }
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env: { POSTGRES_USER: sg, POSTGRES_PASSWORD: pw, POSTGRES_DB: mcpledger_test }
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U sg" --health-interval 2s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "22", cache: npm, cache-dependency-path: web/package-lock.json }
+      - run: pip install -r server/requirements.txt ./cli pytest
+      - run: cd cli && pytest -q
+      - run: cd server && pytest -q -p no:warnings
+      - name: API tests on Postgres
+        run: cd server && TEST_DATABASE_URL=postgresql+psycopg://sg:pw@localhost/mcpledger_test pytest -q -p no:warnings
+      - name: Migrations match models
+        run: cd server && DATABASE_URL=postgresql+psycopg://sg:pw@localhost/mcpledger_test AUTO_CREATE_TABLES=0 sh -c "alembic downgrade base 2>/dev/null; alembic upgrade head && alembic check"
+      - run: cd web && npm ci && npx ng build
+      - name: CLI works on the oldest supported Python
+        uses: actions/setup-python@v5
+        with: { python-version: "3.9" }
+      - run: python3.9 -m pip install ./cli pytest && cd cli && python3.9 -m pytest -q

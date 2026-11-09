@@ -1,0 +1,14 @@
+**/node_modules
+**/.angular
+**/dist
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/*.egg-info
+**/*.db
+**/.venv
+.git
+docs
+scripts
+deploy
+web/.angular

@@ -1,0 +1,38 @@
+# Local stack that mirrors production: Postgres 16 + the production image.
+#   docker compose up --build        ->  http://localhost:8080
+#   docker compose run --rm migrate  (runs automatically before the app starts)
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: mcpledger
+      POSTGRES_PASSWORD: mcpledger
+      POSTGRES_DB: mcpledger
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mcpledger"]
+      interval: 2s
+      retries: 20
+
+  migrate:
+    build: .
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://mcpledger:mcpledger@db/mcpledger
+    depends_on:
+      db: { condition: service_healthy }
+
+  app:
+    build: .
+    ports: ["8080:8080"]
+    environment:
+      DATABASE_URL: postgresql+psycopg://mcpledger:mcpledger@db/mcpledger
+      PUBLIC_URL: http://localhost:8080
+      ALLOWED_ORIGINS: http://localhost:8080
+      SECURE_COOKIES: "0"   # plain http locally
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+volumes:
+  pgdata:
