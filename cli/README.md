@@ -3,14 +3,14 @@
 Inventory, allowlist and drift alerts for the MCP servers and agent skills on your team's machines.
 
 ```bash
-pipx install mcpledger        # or: uv tool install mcpledger
+pipx install "git+https://github.com/mujtabajalil/mcpledger#subdirectory=cli"
 mcpledger scan --local -v     # see what's on this machine, no account needed
 ```
 
 ## With a team
 
 ```bash
-mcpledger enroll <token> --server https://app.mcpledger.dev --email you@company.com
+mcpledger enroll <token> --server https://mcpledger.your-company.com --email you@company.com
 mcpledger scan --introspect   # report to your team, record each server's tools
 mcpledger schedule --every 6  # keep reporting in the background
 ```

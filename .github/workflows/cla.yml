@@ -1,5 +1,5 @@
 # Asks first-time contributors to sign CLA.md by commenting on their pull request.
-# Signatures are stored in the `cla-signatures` branch. Replace OWNER below with your GitHub user or org.
+# Signatures are stored in the `cla-signatures` branch. Signatures are checked against CLA.md on main.
 name: cla
 on:
   issue_comment:
@@ -23,6 +23,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           path-to-signatures: signatures/cla.json
-          path-to-document: https://github.com/OWNER/mcpledger/blob/main/CLA.md
+          path-to-document: https://github.com/mujtabajalil/mcpledger/blob/main/CLA.md
           branch: cla-signatures
           allowlist: dependabot[bot]

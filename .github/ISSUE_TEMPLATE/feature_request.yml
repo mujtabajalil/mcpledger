@@ -1,0 +1,18 @@
+name: Feature request or detection rule
+description: Suggest a feature, or a pattern MCPLedger should flag.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: The situation you're in, not the solution yet.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to happen?
+      description: For a detection rule, include one example that should fire and one benign example that shouldn't.
+    validations:
+      required: true

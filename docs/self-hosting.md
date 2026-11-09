@@ -5,14 +5,14 @@ The Community edition is free, has no device limit, and includes inventory, find
 ## Quick start (Docker, about five minutes)
 
 ```bash
-git clone https://github.com/<you>/mcpledger && cd mcpledger
+git clone https://github.com/mujtabajalil/mcpledger && cd mcpledger
 docker compose up --build -d          # Postgres 16 + MCPLedger on http://localhost:8080
 ```
 
 Open http://localhost:8080, create the first account (it becomes the owner), then on each laptop:
 
 ```bash
-pipx install mcpledger
+pipx install "git+https://github.com/mujtabajalil/mcpledger#subdirectory=cli"
 mcpledger enroll <token from Settings> --server http://your-host:8080
 mcpledger scan --introspect
 ```
@@ -38,4 +38,4 @@ Put it behind your usual TLS reverse proxy (nginx, Caddy, Traefik or a cloud loa
 
 ## Business license
 
-Set `MCPLEDGER_LICENSE_KEY` and restart. Settings > Plan shows the customer name, device limit and expiry. Keys are checked offline, so air-gapped installs work. An expired key falls back to the Community edition without losing data. To buy one, email licensing@mcpledger.dev.
+Set `MCPLEDGER_LICENSE_KEY` and restart. Settings > Plan shows the customer name, device limit and expiry. Keys are checked offline, so air-gapped installs work. An expired key falls back to the Community edition without losing data. To get one, open an issue titled "Business license" at https://github.com/mujtabajalil/mcpledger/issues.

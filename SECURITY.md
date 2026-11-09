@@ -4,9 +4,9 @@ MCPLedger is a security tool, so we treat reports about it with priority.
 
 ## Reporting a vulnerability
 
-Email **security@mcpledger.dev** with steps to reproduce. Please don't open a public issue. You'll get a reply within 3 business days, and a fix or a plan within 30 days for confirmed issues. We credit reporters in release notes unless you'd rather we didn't.
+Report it privately through GitHub: **[Report a vulnerability](https://github.com/mujtabajalil/mcpledger/security/advisories/new)** (Security tab > Report a vulnerability), with steps to reproduce. Please don't open a public issue. You'll get a reply within 3 business days, and a fix or a plan within 30 days for confirmed issues. We credit reporters in release notes unless you'd rather we didn't.
 
-In scope: the `mcpledger` CLI, the server and dashboard in this repository, and the hosted service at app.mcpledger.dev. Out of scope: denial of service by volume, findings that need a compromised developer machine, and social engineering.
+In scope: the `mcpledger` CLI, and the server and dashboard in this repository. Out of scope: denial of service by volume, findings that need a compromised developer machine, and social engineering.
 
 ## What the CLI sends
 

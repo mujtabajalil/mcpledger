@@ -1,0 +1,32 @@
+name: Support a new AI tool
+description: MCPLedger doesn't find the MCP servers or skills of a tool you use.
+labels: [discovery]
+body:
+  - type: input
+    id: tool
+    attributes:
+      label: Tool
+      placeholder: e.g. JetBrains AI Assistant
+    validations:
+      required: true
+  - type: textarea
+    id: paths
+    attributes:
+      label: Where it stores MCP servers and skills
+      description: Config file paths on macOS, Linux and Windows, user and project level, and the JSON/TOML key that holds the servers.
+      placeholder: |
+        macOS: ~/Library/Application Support/Example/mcp.json  (key: mcpServers)
+        Project: .example/mcp.json
+    validations:
+      required: true
+  - type: textarea
+    id: sample
+    attributes:
+      label: Example config (secrets removed)
+      render: json
+  - type: checkboxes
+    id: pr
+    attributes:
+      label: Contribution
+      options:
+        - label: I'd like to open a pull request for this (see CONTRIBUTING.md, it's usually a few lines in `discovery.py`).

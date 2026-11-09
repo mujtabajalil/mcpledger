@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="340" viewBox="0 0 1280 340" role="img" aria-labelledby="t d">
+  <title id="t">MCPLedger</title>
+  <desc id="d">Inventory, allowlist and drift alerts for the MCP servers and agent skills on your team's machines.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#173a44"/>
+      <stop offset="1" stop-color="#112b33"/>
+    </linearGradient>
+    <pattern id="rule" width="1280" height="34" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="33.5" x2="1280" y2="33.5" stroke="#eef0ec" stroke-opacity="0.045"/>
+    </pattern>
+    <clipPath id="card"><rect width="1280" height="340" rx="20"/></clipPath>
+    <style>
+      .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Public Sans", Helvetica, Arial, sans-serif; }
+      .mono { font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace; }
+    </style>
+  </defs>
+
+  <g clip-path="url(#card)">
+    <rect width="1280" height="340" fill="url(#bg)"/>
+    <rect width="1280" height="340" fill="url(#rule)"/>
+    <!-- ledger margin line -->
+    <line x1="64.5" y1="0" x2="64.5" y2="340" stroke="#b3261e" stroke-opacity="0.35"/>
+  </g>
+
+  <!-- mark -->
+  <g transform="translate(104 84) scale(3)">
+    <rect width="32" height="32" rx="7" fill="#1f4652"/>
+    <path d="M8 25V11l8-5 8 5v14" fill="none" stroke="#eef0ec" stroke-width="2.6" stroke-linejoin="round"/>
+    <path d="M12.5 25v-8h7v8" fill="none" stroke="#7fc8b8" stroke-width="2.6"/>
+  </g>
+
+  <!-- wordmark + tagline -->
+  <text x="104" y="250" class="sans" font-size="58" font-weight="700" fill="#eef0ec" letter-spacing="-1">MCP<tspan fill="#7fc8b8">Ledger</tspan></text>
+  <text x="106" y="290" class="sans" font-size="21" fill="#a9bdbb">Know every MCP server and agent skill your team runs.</text>
+
+  <!-- ledger panel -->
+  <g transform="translate(660 56)">
+    <rect width="560" height="228" rx="12" fill="#0d2329" stroke="#2a5561"/>
+    <text x="24" y="38" class="mono" font-size="13" fill="#7a9a9c" letter-spacing="1.5">COMPONENT</text>
+    <text x="250" y="38" class="mono" font-size="13" fill="#7a9a9c" letter-spacing="1.5">FINGERPRINT</text>
+    <text x="536" y="38" class="mono" font-size="13" fill="#7a9a9c" letter-spacing="1.5" text-anchor="end">STATUS</text>
+    <line x1="0" y1="54.5" x2="560" y2="54.5" stroke="#2a5561"/>
+
+    <!-- row 1 -->
+    <text x="24" y="92" class="mono" font-size="17" fill="#eef0ec">server-github</text>
+    <text x="250" y="92" class="mono" font-size="17" fill="#7a9a9c">1581a012</text>
+    <rect x="420" y="72" width="116" height="28" rx="14" fill="#2c7a4b" fill-opacity="0.28"/>
+    <circle cx="438" cy="86" r="4" fill="#8fd3a6"/>
+    <text x="450" y="91.5" class="sans" font-size="15" font-weight="600" fill="#8fd3a6">Approved</text>
+    <line x1="24" y1="108.5" x2="536" y2="108.5" stroke="#1f4652"/>
+
+    <!-- row 2 -->
+    <text x="24" y="146" class="mono" font-size="17" fill="#eef0ec">postmark-mcp</text>
+    <text x="250" y="146" class="mono" font-size="17" fill="#f0c36a">e2f05c80</text>
+    <rect x="420" y="126" width="116" height="28" rx="14" fill="#a86a00" fill-opacity="0.30"/>
+    <circle cx="438" cy="140" r="4" fill="#f0c36a"/>
+    <text x="450" y="145.5" class="sans" font-size="15" font-weight="600" fill="#f0c36a">Changed</text>
+    <line x1="24" y1="162.5" x2="536" y2="162.5" stroke="#1f4652"/>
+
+    <!-- row 3 -->
+    <text x="24" y="200" class="mono" font-size="17" fill="#eef0ec">deploy-helper</text>
+    <text x="250" y="200" class="mono" font-size="17" fill="#f4a39c">curl | sh</text>
+    <rect x="420" y="180" width="116" height="28" rx="14" fill="#b3261e" fill-opacity="0.32"/>
+    <circle cx="438" cy="194" r="4" fill="#f4a39c"/>
+    <text x="450" y="199.5" class="sans" font-size="15" font-weight="600" fill="#f4a39c">Blocked</text>
+  </g>
+</svg>
