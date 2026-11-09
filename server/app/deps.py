@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Optional
@@ -18,9 +19,15 @@ ROLE_RANK = {"member": 0, "admin": 1, "owner": 2}
 
 
 def client_ip(request: Request) -> str:
+    """The caller's IP as seen by our own proxy. Clients can prepend anything to
+    X-Forwarded-For, so count from the right: Cloud Run's front end appends one hop,
+    a load balancer in front adds another (TRUSTED_PROXY_HOPS=2)."""
     fwd = request.headers.get("x-forwarded-for")
     if fwd:
-        return fwd.split(",")[0].strip()
+        parts = [p.strip() for p in fwd.split(",") if p.strip()]
+        hops = max(1, int(os.environ.get("TRUSTED_PROXY_HOPS", "1")))
+        if parts:
+            return parts[-hops] if len(parts) >= hops else parts[0]
     return request.client.host if request.client else ""
 
 
